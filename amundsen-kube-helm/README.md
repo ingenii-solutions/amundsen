@@ -25,7 +25,7 @@ Note we updated from elasticsearch 6 to elasticsearch 7
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://helm.elastic.co | elasticsearch | 7.13.4 |
+| https://helm.elastic.co | elasticsearch | 7.17.3 |
 
 ## Values
 
