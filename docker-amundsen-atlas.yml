@@ -13,7 +13,7 @@ services:
       - ATLAS_KICKSTART_AMUNDSEN=true
       - METADATA_DATA_DIR=/data # https://atlas.apache.org/0.5.0-incubating/InstallationSteps.html
     volumes:
-      - atlas_data:/data
+      - ${PWD}/data/atlas:/data
   amundsensearch:
     build:
       context: .
@@ -110,10 +110,6 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - es_data:/usr/share/elasticsearch/data
+      - ${PWD}/data/elasticsearch:/usr/share/elasticsearch/data
 networks:
   amundsennet:
-
-volumes:
-  es_data:
-  atlas_data:
