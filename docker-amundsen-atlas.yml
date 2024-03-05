@@ -11,10 +11,14 @@ services:
       - amundsennet
     environment:
       - ATLAS_KICKSTART_AMUNDSEN=true
+      - METADATA_DATA_DIR=/data # https://atlas.apache.org/0.5.0-incubating/InstallationSteps.html
+    volumes:
+      - atlas_data:/data
   amundsensearch:
     build:
       context: .
       dockerfile: Dockerfile.search.public
+    # image: amundsendev/amundsen-search:4.1.1
     container_name: amundsensearch
     depends_on:
       - elasticsearch
@@ -22,12 +26,23 @@ services:
       - 5001:5001
     environment:
       - PROXY_ENDPOINT=es_amundsen_atlas
+      # - FLASK_APP_MODULE_NAME=flaskoidc
+      # - FLASK_APP_CLASS_NAME=FlaskOIDC
+      # - FLASK_OIDC_CLIENT_ID="2e963b48-1ec3-48b0-969e-b6257a59b10e"
+      # - FLASK_OIDC_CLIENT_SECRET="mVZ8Q~_7aJYmrFzLlI_r1d4mFkzgaQQ.HB3tvc-~"
+      # - FLASK_OIDC_PROVIDER_NAME=azure
+      # - FLASK_OIDC_SCOPES="openid email profile"
+      # - FLASK_OIDC_USER_ID_FIELD=email
+      # - FLASK_OIDC_REDIRECT_URI="/auth"
+      # - FLASK_OIDC_CONFIG_URL="https://graph.microsoft.com/v1.0/users"
+      # - FLASK_OIDC_WHITELISTED_ENDPOINTS="status,healthcheck,health"
     networks:
       - amundsennet
   amundsenmetadata:
     build:
       context: .
       dockerfile: Dockerfile.metadata.public
+    # image: amundsendev/amundsen-metadata-oidc:3.12.3
     container_name: amundsenmetadata
     ports:
       - 5002:5002
@@ -41,6 +56,16 @@ services:
       - PROXY_ENCRYPTED=False
       - PROXY_CLIENT=ATLAS
       - METADATA_SVC_CONFIG_MODULE_CLASS=metadata_service.config.AtlasConfig
+      # - FLASK_APP_MODULE_NAME=flaskoidc
+      # - FLASK_APP_CLASS_NAME=FlaskOIDC
+      # - FLASK_OIDC_CLIENT_ID="2e963b48-1ec3-48b0-969e-b6257a59b10e"
+      # - FLASK_OIDC_CLIENT_SECRET="mVZ8Q~_7aJYmrFzLlI_r1d4mFkzgaQQ.HB3tvc-~"
+      # - FLASK_OIDC_PROVIDER_NAME=azure
+      # - FLASK_OIDC_SCOPES="openid email profile"
+      # - FLASK_OIDC_USER_ID_FIELD=email
+      # - FLASK_OIDC_REDIRECT_URI="/auth"
+      # - FLASK_OIDC_CONFIG_URL="https://graph.microsoft.com/v1.0/users"
+      # - FLASK_OIDC_WHITELISTED_ENDPOINTS="status,healthcheck,health"
   amundsenfrontend:
     build:
       context: .
@@ -48,6 +73,7 @@ services:
         SEARCHSERVICE_BASE: http://amundsensearch:5001
         METADATASERVICE_BASE: http://amundsenmetadata:5002
       dockerfile: Dockerfile.frontend.local
+    # image: amundsendev/amundsen-frontend-oidc:4.2.0
     container_name: amundsenfrontend
     depends_on:
       - amundsenmetadata
@@ -59,16 +85,35 @@ services:
     environment:
       - METADATASERVICE_BASE=http://amundsenmetadata:5002
       - SEARCHSERVICE_BASE=http://amundsensearch:5001
+      # - FLASK_APP_MODULE_NAME=flaskoidc
+      # - FLASK_APP_CLASS_NAME=FlaskOIDC
+      # - FLASK_OIDC_CLIENT_ID="2e963b48-1ec3-48b0-969e-b6257a59b10e"
+      # - FLASK_OIDC_CLIENT_SECRET="mVZ8Q~_7aJYmrFzLlI_r1d4mFkzgaQQ.HB3tvc-~"
+      # - FLASK_OIDC_PROVIDER_NAME=azure
+      # - FLASK_OIDC_SCOPES="openid email profile"
+      # - FLASK_OIDC_USER_ID_FIELD=email
+      # - FLASK_OIDC_REDIRECT_URI="/auth"
+      # - FLASK_OIDC_CONFIG_URL="https://graph.microsoft.com/v1.0/users"
+      # - FLASK_OIDC_WHITELISTED_ENDPOINTS="status,healthcheck,health"
   elasticsearch:
-    image: elasticsearch:6.8.13
+    # image: elasticsearch:6.8.13
+    image: elasticsearch:7.17.17
     container_name: es_amundsen_atlas
     ports:
       - 9200:9200
     networks:
       - amundsennet
+    environment:
+      - discovery.type=single-node
     ulimits:
       nofile:
         soft: 65536
         hard: 65536
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
 networks:
   amundsennet:
+
+volumes:
+  es_data:
+  atlas_data:
