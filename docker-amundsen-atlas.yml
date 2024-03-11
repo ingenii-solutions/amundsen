@@ -1,28 +1,6 @@
 version: '3'
 services:
   atlas:
-    # the image comes from https://github.com/ing-bank/rokku-dev-apache-atlas
-    # it might take some time for Atlas to start
-    # image: wbaa/rokku-dev-apache-atlas:0.1.5
-    # build:
-    #   context: atlas
-    #   dockerfile: Dockerfile
-    # container_name: atlas
-    # ports:
-    #   - 21000:21000
-    # networks:
-    #   - amundsennet
-    # environment:
-    #   - ATLAS_KICKSTART_AMUNDSEN=true
-    #   # - ATLAS_HOME_DIR=/atlas_data # https://atlas.apache.org/#/Installation https://github.com/sburn/docker-apache-atlas?tab=readme-ov-file#environment-variables
-    #   - ATLAS_LOG_DIR=/atlas_logs
-    #   - ATLAS_PID_DIR=/atlas_pid
-    #   - HBASE_CONF_DIR=/opt/atlas/conf
-    # volumes:
-    #   - ${PWD}/data/atlas_metadata:/atlas_metadata
-    #   - ${PWD}/data/atlas_data:/atlas_data # https://hbase.apache.org/book.html#hbase_default_configurations
-    #   - ${PWD}/data/atlas_logs:/atlas_logs
-    #   - ${PWD}/data/atlas_pid:/atlas_pid
     image: sburn/apache-atlas:2.3.0
     container_name: atlas
     ports:
@@ -35,7 +13,6 @@ services:
       - ATLAS_LOG_DIR=/atlas_logs
       - ATLAS_PID_DIR=/atlas_pid
     volumes:
-      - ${PWD}/data/atlas_metadata:/atlas_metadata
       - ${PWD}/data/atlas_data:/apache-atlas/data # https://hbase.apache.org/book.html#hbase_default_configurations
       - ${PWD}/data/atlas_logs:/atlas_logs
       - ${PWD}/data/atlas_pid:/atlas_pid
@@ -121,7 +98,6 @@ services:
       # - FLASK_OIDC_CONFIG_URL="https://graph.microsoft.com/v1.0/users"
       # - FLASK_OIDC_WHITELISTED_ENDPOINTS="status,healthcheck,health"
   elasticsearch:
-    # image: elasticsearch:6.8.13
     image: elasticsearch:7.17.17
     container_name: es_amundsen_atlas
     ports:
