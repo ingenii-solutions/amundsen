@@ -3,7 +3,27 @@ services:
   atlas:
     # the image comes from https://github.com/ing-bank/rokku-dev-apache-atlas
     # it might take some time for Atlas to start
-    image: wbaa/rokku-dev-apache-atlas:0.1.5
+    # image: wbaa/rokku-dev-apache-atlas:0.1.5
+    # build:
+    #   context: atlas
+    #   dockerfile: Dockerfile
+    # container_name: atlas
+    # ports:
+    #   - 21000:21000
+    # networks:
+    #   - amundsennet
+    # environment:
+    #   - ATLAS_KICKSTART_AMUNDSEN=true
+    #   # - ATLAS_HOME_DIR=/atlas_data # https://atlas.apache.org/#/Installation https://github.com/sburn/docker-apache-atlas?tab=readme-ov-file#environment-variables
+    #   - ATLAS_LOG_DIR=/atlas_logs
+    #   - ATLAS_PID_DIR=/atlas_pid
+    #   - HBASE_CONF_DIR=/opt/atlas/conf
+    # volumes:
+    #   - ${PWD}/data/atlas_metadata:/atlas_metadata
+    #   - ${PWD}/data/atlas_data:/atlas_data # https://hbase.apache.org/book.html#hbase_default_configurations
+    #   - ${PWD}/data/atlas_logs:/atlas_logs
+    #   - ${PWD}/data/atlas_pid:/atlas_pid
+    image: sburn/apache-atlas:2.3.0
     container_name: atlas
     ports:
       - 21000:21000
@@ -11,9 +31,14 @@ services:
       - amundsennet
     environment:
       - ATLAS_KICKSTART_AMUNDSEN=true
-      - METADATA_DATA_DIR=/data # https://atlas.apache.org/0.5.0-incubating/InstallationSteps.html
+      # - ATLAS_HOME_DIR=/atlas_data # https://atlas.apache.org/#/Installation https://github.com/sburn/docker-apache-atlas?tab=readme-ov-file#environment-variables
+      - ATLAS_LOG_DIR=/atlas_logs
+      - ATLAS_PID_DIR=/atlas_pid
     volumes:
-      - ${PWD}/data/atlas:/data
+      - ${PWD}/data/atlas_metadata:/atlas_metadata
+      - ${PWD}/data/atlas_data:/apache-atlas/data # https://hbase.apache.org/book.html#hbase_default_configurations
+      - ${PWD}/data/atlas_logs:/atlas_logs
+      - ${PWD}/data/atlas_pid:/atlas_pid
   amundsensearch:
     build:
       context: .
